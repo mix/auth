@@ -1,5 +1,5 @@
 # auth [![wercker status](https://app.wercker.com/status/8e5237b01b52f169a1274fad9a89617b "wercker status")](https://app.wercker.com/project/bykey/8e5237b01b52f169a1274fad9a89617b)
-Martini middleware/handler for http basic authentication.
+Negroni middleware/handler for http basic authentication. Fork of [martini-contrib/auth](https://www.github.com/martini-contrib/auth). Code borrowed from [nabeken/negroni-auth](https://www.github.com/nabeken/negroni-auth).
 
 [API Reference](http://godoc.org/github.com/martini-contrib/auth)
 
