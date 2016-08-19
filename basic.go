@@ -2,7 +2,7 @@ package auth
 
 import (
 	"encoding/base64"
-	"github.com/codegangsta/negroni"
+	"github.com/urfave/negroni"
 	"net/http"
 	"strings"
 )
