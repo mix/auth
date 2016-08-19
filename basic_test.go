@@ -2,7 +2,7 @@ package auth
 
 import (
 	"encoding/base64"
-	"github.com/go-martini/martini"
+	"github.com/urfave/negroni"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -13,10 +13,10 @@ func Test_BasicAuth(t *testing.T) {
 
 	auth := "Basic " + base64.StdEncoding.EncodeToString([]byte("foo:bar"))
 
-	m := martini.New()
+	m := negroni.New()
 	m.Use(Basic("foo", "bar"))
-	m.Use(func(res http.ResponseWriter, req *http.Request, u User) {
-		res.Write([]byte("hello " + u))
+	m.UseHandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		res.Write([]byte("hello"))
 	})
 
 	r, _ := http.NewRequest("GET", "foo", nil)
@@ -27,7 +27,7 @@ func Test_BasicAuth(t *testing.T) {
 		t.Error("Response not 401")
 	}
 
-	if recorder.Body.String() == "hello foo" {
+	if recorder.Body.String() == "hello" {
 		t.Error("Auth block failed")
 	}
 
@@ -39,7 +39,7 @@ func Test_BasicAuth(t *testing.T) {
 		t.Error("Response is 401")
 	}
 
-	if recorder.Body.String() != "hello foo" {
+	if recorder.Body.String() != "hello" {
 		t.Error("Auth failed, got: ", recorder.Body.String())
 	}
 }
@@ -59,11 +59,11 @@ func Test_BasicFuncAuth(t *testing.T) {
 		recorder := httptest.NewRecorder()
 		encoded := "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
 
-		m := martini.New()
+		m := negroni.New()
 		m.Use(BasicFunc(func(username, password string) bool {
 			return (username == "foo" || username == "bar") && password == "spam"
 		}))
-		m.Use(func(res http.ResponseWriter, req *http.Request) {
+		m.UseHandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 			res.Write([]byte("hello"))
 		})
 
